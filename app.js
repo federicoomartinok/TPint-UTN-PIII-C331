@@ -3,6 +3,8 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const sequelize = require("./data/db");
+const Task = require("./models/task.model");
 
 var indexRouter = require("./routes/index");
 
@@ -35,5 +37,24 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+const defaultTasks = [
+  { task: "Aprender C#", completed: true },
+  { task: "Aprender Java", completed: true },
+  { task: "Aprender SQL", completed: true },
+  { task: "Aprender JS", completed: false },
+];
+
+sequelize
+  .sync({ force: true })
+  .then(async () => {
+    console.log("Base de datos reiniciada correctamente.");
+
+    await Task.bulkCreate(defaultTasks);
+    console.log("Tareas iniciales creadas correctamente.");
+  })
+  .catch((error) => {
+    console.error("Error al sincronizar la base de datos:", error);
+  });
 
 module.exports = app;
