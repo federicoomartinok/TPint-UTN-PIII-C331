@@ -1,0 +1,26 @@
+<ul class="list-group">
+    <% tasks.forEach(task=> { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center 
+  <%= task.completed ? 'completed' : '' %>">
+            <span>
+                <%= task.task %>
+            </span>
+            <div>
+                <form action="/complete/<%= task.id %>" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-success" title="Mark as completed">
+                        ✓
+                    </button>
+                </form>
+                <form action="/delete/<%= task.id %>" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-danger" title="Delete task">
+                        ✗
+                    </button>
+                </form>
+            </div>
+        </li>
+        <% }) %>
+</ul>
+
+<% if (tasks.length===0) { %>
+    <p class="text-muted text-center mt-4">No tasks yet. Add a new task to get started!</p>
+    <% } %>
