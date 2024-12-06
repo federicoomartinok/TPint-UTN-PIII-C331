@@ -14,12 +14,10 @@ const getTasksController = async (_req, res) => {
 // Obtener una tarea por ID
 const getTasksByIdController = async (req, res) => {
   try {
-    const task = await Task.findOne();
-
+    const task = await Task.findByPk(req.params.id);
     if (!task) {
       return res.status(404).json({ error: "Tarea no encontrada" });
     }
-
     res.status(200).json(task);
   } catch (error) {
     console.error(error);
@@ -46,8 +44,41 @@ const addTasksController = async (req, res) => {
   }
 };
 
+const deleteTaskController = async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) {
+      return res.status(404).json({ error: "Tarea no encontrada" });
+    }
+    await task.destroy();
+    res.status(200).json({ message: "Tarea eliminada exitosamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al eliminar la tarea" });
+  }
+}
+
+
+const updateTaskController = async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) {
+      return res.status(404).json({ error: "Tarea no encontrada" });
+    }
+    await task.update({    
+      completed: req.body.status,
+    });
+    res.status(200).json({ message: "Tarea actualizada exitosamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar la tarea" });
+  }
+}
+
 module.exports = {
   getTasksByIdController,
   getTasksController,
   addTasksController,
+  deleteTaskController,
+  updateTaskController,
 };
