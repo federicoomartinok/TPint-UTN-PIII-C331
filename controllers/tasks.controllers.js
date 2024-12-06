@@ -13,10 +13,8 @@ const getTasksController = async (_req, res) => {
 
 // Obtener una tarea por ID
 const getTasksByIdController = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const task = await Task.findByPk(id);
+    const task = await Task.findOne();
 
     if (!task) {
       return res.status(404).json({ error: "Tarea no encontrada" });
